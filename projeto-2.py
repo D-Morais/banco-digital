@@ -29,12 +29,16 @@ def saque(*, saldo, valor_saque, extrato, limite, numero_saques, limite_saques):
     return saldo, extrato
 
 
-"""
-            DEPÓSITO
-A função depósito deve receber os argumentos apenas por
-posição (posicional only). Sugestão de argumentos: saldo, valor,
-extrato. Sugestão de retorno: saldo e extrato.    
-"""
+def deposito(saldo, valor_deposito, extrato, /):
+
+    print("================= ÁREA DEPÓSITO =================")
+    while valor_deposito <= 0:
+        valor_deposito = float(input(f"Valor inválido. \nPor favor, digite novamente o valor de depósito:"))
+    saldo += valor_deposito
+    extrato = extrato + f"Depósito de R$ {valor_deposito:.2f}\n"
+    print("===============================================")
+    return saldo, extrato
+
 
 """
             Extrato
@@ -42,6 +46,14 @@ A função extrato deve receber os argumentos por posição e
 nome (positional only e keyword only). Argumentos
 posicionais: saldo, argumentos nomeados: extrato.
 """
+
+
+def ver_extrato(saldo, /, *, extrato):
+    print("============= EXTRATO =============")
+    print("Não foram realizadas movimentações." if not extrato else extrato)
+    print(f"\nSaldo: R$ {saldo:.2f}")
+    print("===================================")
+
 
 """
             NOVAS FUNÇÕES
@@ -82,14 +94,6 @@ def criar_usuario():
 
 
 def criar_conta_corrente():
-    pass
-
-
-def sacar():
-    pass
-
-
-def deposito():
     pass
 
 
