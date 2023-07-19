@@ -28,6 +28,8 @@ while True:
         valor_saque = float(input("Digite o valor de saque:"))
         if valor_saque <= 0:
             print(f"Valor de saque inválido.")
+        elif valor_saque > limite:
+            print(f"Desculpa, o valor do saque excede o limite.")
         elif valor_saque > saldo:
             print(f"Desculpa, você não tem saldo suficiente.")
         elif LIMITE_SAQUES == 0:

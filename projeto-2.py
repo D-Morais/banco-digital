@@ -1,10 +1,4 @@
 """
-Separar as funções existentes de saque, depósito e
-extrato em funções. Criar duas novas funções:
-cadastrar usuário (cliente) e cadastrar conta bancária.
-"""
-
-"""
                     DESAFIO
 Precisamos deixar nosso código mais modularizado, para isso 
 vamos criar funções para as operações existentes: sacar,
@@ -14,22 +8,26 @@ usuário (cliente do banco) e criar conta corrente (vincular com
 usuário).
 """
 
-"""
-            SEPARAÇÃO EM FUNÇÕES
-Devemos criar funções para todas as operações do sistema.
-Para exercitar tudo o que aprendemos neste módulo, cada
-função vai ter uma regra na passagem de argumentos. O
-retorno e a forma como serão chamadas, pode ser definida por
-você da forma que char melhor.
-"""
 
-"""
-            SAQUE
-A função saque deve receber os argumentos apenas por nome
-(keyword only). Sugestão de argumentos: saldo, valor, extrato,
-limite, numero_saques, limites_saques. Sugestão de retorno:
-saldo e extrato.
-"""
+def saque(*, saldo, valor_saque, extrato, limite, numero_saques, limite_saques):
+    print("============ ÁREA SAQUE ============")
+
+    if valor_saque <= 0:
+        print(f"Valor de saque inválido.")
+    elif valor_saque > limite:
+        print(f"Desculpa, o valor informado excede o limite.")
+    elif valor_saque > saldo:
+        print(f"Desculpa, você não tem saldo suficiente.")
+    elif numero_saques == limite_saques:
+        print(f"Desculpa, você já realizou 3 saques no dia.")
+    else:
+        saldo -= valor_saque
+        extrato = extrato + f"Saque de R$ {valor_saque:.2f}\n"
+        numero_saques += 1
+
+    print("====================================")
+    return saldo, extrato
+
 
 """
             DEPÓSITO
@@ -77,3 +75,39 @@ Para vincular um usuário a uma conta, filtre a lista de usuários
 buscandp o número do CPF informado para cada usuário da 
 lista.
 """
+
+
+def criar_usuario():
+    pass
+
+
+def criar_conta_corrente():
+    pass
+
+
+def sacar():
+    pass
+
+
+def deposito():
+    pass
+
+
+def main():
+    while True:
+        print("======================= MENU =======================")
+        escolha = int(input("[1] Depositar \n[2] Sacar \n[3] Extrato \n[0] Sair \n"
+                            "====================================================\n"))
+        if escolha == 1:
+            pass
+        elif escolha == 2:
+            pass
+        elif escolha == 3:
+            pass
+        elif escolha == 0:
+            break
+        else:
+            print("Erro, informe um número existente no menu")
+
+
+main()
