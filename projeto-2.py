@@ -1,12 +1,11 @@
-"""
-                    DESAFIO
-Precisamos deixar nosso código mais modularizado, para isso 
-vamos criar funções para as operações existentes: sacar,
-depositar e visualizar histórico. Além disso, para a versão 2 do
-nosso sistema precisamos criar duas novas funções: criar
-usuário (cliente do banco) e criar conta corrente (vincular com
-usuário).
-"""
+def deposito(saldo, valor_deposito, extrato, /):
+    while valor_deposito <= 0:
+        valor_deposito = float(input(f"Valor inválido. \nPor favor, digite novamente o valor de depósito:\n"))
+    saldo += valor_deposito
+    extrato = extrato + f"Depósito de R$ {valor_deposito:.2f}\n"
+    print(f"Depósito no valor de R$ {valor_deposito:.2f} realizado com sucesso.")
+
+    return saldo, extrato
 
 
 def saque(*, saldo, valor_saque, extrato, limite, numero_saques, limite_saques):
@@ -28,58 +27,74 @@ def saque(*, saldo, valor_saque, extrato, limite, numero_saques, limite_saques):
     return saldo, extrato, numero_saques
 
 
-def deposito(saldo, valor_deposito, extrato, /):
-
-    while valor_deposito <= 0:
-        valor_deposito = float(input(f"Valor inválido. \nPor favor, digite novamente o valor de depósito:\n"))
-    saldo += valor_deposito
-    extrato = extrato + f"Depósito de R$ {valor_deposito:.2f}\n"
-    print(f"Depósito no valor de R$ {valor_deposito:.2f} realizado com sucesso.")
-
-    return saldo, extrato
-
-
 def ver_extrato(saldo, /, *, extrato):
+
     print("============= EXTRATO =============")
     print("Não foram realizadas movimentações." if not extrato else extrato)
     print(f"\nSaldo: R$ {saldo:.2f}")
     print("===================================\n")
 
 
-"""
-            NOVAS FUNÇÕES
-Precisamos criar duas novas funções: criar usuário e criar conta
-corrente. Fique a vontade para adicionar mais funções,
-exemplo: listar contas. 
-"""
-
-"""
-            CRIAR USUÁRIO (CLIENTE)
-O programa deve armazenar os usuários em uma lista, um
-usuário é composto por: nome, data de nascimento, cpf e
-endereço. O endereço é uma string com o formato: logradouro,
-nro - bairro - cidade/sigla estado. Deve ser armazenado
-somente os números do CPF. Não podemos cadastrar 2
-usuários com o mesmo CPF.
-"""
 def criar_usuario(usuarios):
-    pass
-"""
-            CRAIR CONTA CORRENTE
-O programa deve armazenar contas em uma lista, uma conta é
-composta por: agência, número da conta e usuário. O numero
-da conta é sequencial, iniciando em 1. O número da agência é
-fixo: "0001". O usuário pode ter mais de uma conta, mas uma
-conta pertence a somente um usuário.
-"""
-def criar_conta_corrente(AGENCIA, numero_conta, usuarios):
-    pass
-"""
-            DICA
-Para vincular um usuário a uma conta, filtre a lista de usuários
-buscandp o número do CPF informado para cada usuário da 
-lista.
-"""
+    cpf = input("Insira o CPF: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuario:
+        print("\nJá existe usuário com esse CPF!")
+        return
+
+    nome = input("Insira o nome completo: ")
+    data_nascimento = input("Insira a data de nascimento: ")
+    endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+
+    usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+
+
+def filtrar_usuario(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+
+def criar_conta_corrente(agencia, numero_conta, usuarios):
+    cpf = input("Informe o CPF do usuário: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+    if usuario:
+        print(f"\nConta número {numero_conta} criada com sucesso!")
+        return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+
+    print("\nUsuário não encontrado, fluxo de criação de conta encerrado!")
+
+
+def listar_contas(contas):
+    print("=============== CONTAS ===============")
+    for conta in contas:
+        print(f"""\
+            Agência:\t{conta['agencia']}
+            C/C:\t\t{conta['numero_conta']}
+            Titular:\t{conta['usuario']['nome']}
+        """)
+    print("======================================\n")
+
+
+def listar_usuarios(usuarios):
+    print("============== USUÁRIOS ==============")
+    for usuario in usuarios:
+        print(f"""\
+            Nome:\t{usuario['nome']}
+            Data de Nascimento:\t\t{usuario['data_nascimento']}
+            CPF:\t{usuario['cpf']}
+            Endereço:\t{usuario['endereco']}
+        """)
+    print("======================================\n")
+
+
+def menu():
+    print("=============== MENU ===============")
+    escolha = int(input("[1] Depositar \n[2] Sacar \n[3] Extrato \n[4] Criar Usuário \n[5] Criar Conta"
+                        "\n[6] Listar Usuários \n[7] Listar Contas \n[0] Sair \n"
+                        "====================================\n"))
+    return escolha
 
 
 def main():
@@ -95,20 +110,19 @@ def main():
 
     while True:
 
-        print("===================== MENU =====================")
-        escolha = int(input("[1] Depositar \n[2] Sacar \n[3] Extrato \n[0] Sair \n"
-                            "================================================\n"))
+        escolha = menu()
+
         if escolha == 1:
-            print("================= ÁREA DEPÓSITO =================")
-            valor = float(input("Digite o valor de depósito:"))
+            print("=================== ÁREA DEPÓSITO ===================")
+            valor = float(input("Digite o valor do depósito: "))
             saldo_existente, extrato = deposito(saldo_existente, valor, extrato)
-            print("===============================================\n")
+            print("=====================================================\n")
 
         elif escolha == 2:
-
             print("============ ÁREA SAQUE ============")
             valor = float(input("Digite o valor de saque:"))
-            saldo_existente, extrato, saques_realizados = saque(saldo=saldo_existente, valor_saque=valor,
+            saldo_existente, extrato, saques_realizados = saque(saldo=saldo_existente,
+                                                                valor_saque=valor,
                                                                 extrato=extrato, limite=limite,
                                                                 numero_saques=saques_realizados,
                                                                 limite_saques=LIMITE_SAQUES)
@@ -116,10 +130,21 @@ def main():
 
         elif escolha == 3:
             ver_extrato(saldo_existente, extrato=extrato)
+
         elif escolha == 4:
-            pass
+            print("============ ÁREA USUÁRIO ============")
+            criar_usuario(usuarios)
         elif escolha == 5:
-            pass
+            print("============ ÁREA CONTAS ============")
+            numero_conta = len(contas) + 1
+            conta = criar_conta_corrente(AGENCIA, numero_conta, usuarios)
+
+            if conta:
+                contas.append(conta)
+        elif escolha == 6:
+            listar_usuarios(usuarios)
+        elif escolha == 7:
+            listar_contas(contas)
         elif escolha == 0:
             break
         else:
